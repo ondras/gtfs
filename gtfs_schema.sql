@@ -39,7 +39,8 @@ create table stops (
 
   -- pid specific
   asw_node_id int,
-  asw_stop_id int
+  asw_stop_id int,
+  zone_region_type int
 
   -- does not work with empty strings
   -- FOREIGN KEY (parent_station) REFERENCES stops(stop_id)
