@@ -1,23 +1,27 @@
 #!/bin/sh
 
-cd $(dirname $0)
+DATA=/home/sqlite
 FILE=PID_GTFS.zip
-DIR=static
+CUR=$(dirname $0)
 
-logger -t gtfs starting and downloading...
-curl -O https://data.pid.cz/$FILE
+cd $DATA
 
-logger -t gtfs unzipping...
-mkdir -p $DIR
-unzip -o $FILE -d $DIR
+echo starting and downloading...
+wget https://data.pid.cz/$FILE
+
+echo unzipping...
+mkdir -p static
+unzip -o $FILE -d static
 rm $FILE
 
-logger -t gtfs db creating...
-sqlite3 gtfs-new.sqlite ".read gtfs_schema.sql"
-logger -t gtfs db importing...
-sqlite3 gtfs-new.sqlite ".read gtfs_import.sql"
-logger -t gtfs db swap...
+echo db creating...
+sqlite3 gtfs-new.sqlite ".read $CUR/gtfs_schema.sql"
+
+echo db importing...
+sqlite3 gtfs-new.sqlite ".read $CUR/gtfs_import.sql"
+
+echo db swap...
 mv gtfs-new.sqlite gtfs.sqlite
 
-logger -t gtfs done
+echo done
 
